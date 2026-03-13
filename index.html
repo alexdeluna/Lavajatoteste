@@ -18,10 +18,25 @@
 
 <!-- MENU INICIAL -->
 <section id="menu">
+<button class="botaoGrande" onclick="abrirTela('configPrecos'); carregarPrecos()">
+Configurar Preços
+</button>
 <button class="botaoGrande" onclick="abrirTela('novaLavagem')">Registrar Nova Lavagem</button>
 <button class="botaoGrande" onclick="abrirTela('consultar')">Consultar Veículo</button>
 <button class="botaoGrande" onclick="abrirTela('dashboard'); atualizarDashboard()">Dashboard</button>
+<button class="botaoGrande" onclick="abrirTela('historico'); carregarHistorico()">Histórico de Lavagens</button>
+<button class="botaoGrande" onclick="abrirTela('clientesInteligentes'); analisarClientes()">
+Clientes do Lava-Jato
+</button>
+<button class="botaoGrande" onclick="gerarBancoTeste()">
+Gerar Banco de Teste
+</button>
+<button class="botaoGrande" onclick="gerarBancoTesteCompleto()">
+Gerar Banco de Testes Completo
+</button>
 </section>
+
+
 
 <!-- NOVA LAVAGEM -->
 <section id="novaLavagem" class="tela">
@@ -102,6 +117,85 @@ if('serviceWorker' in navigator){
   .catch(err=>console.log('Erro SW:', err))
 }
 </script>
+
+<section id="historico" class="tela">
+
+<h2>Histórico de Lavagens</h2>
+
+<div id="listaHistorico"></div>
+
+<button class="voltar" onclick="voltarMenu()">
+Voltar
+</button>
+
+</section>
+
+<section id="clientesInteligentes" class="tela">
+
+<h2>Clientes do Lava-Jato</h2>
+
+<h3>💰 Faturamento Hoje</h3>
+<p id="faturamentoHojeTempoReal">R$ 0</p>
+
+<h3>🚗 Lavaram Hoje</h3>
+<div id="clientesHoje"></div>
+
+<h3>⭐ Clientes VIP (10+ lavagens)</h3>
+<div id="clientesVIP"></div>
+
+<h3>📅 Mais de 20 dias sem lavar</h3>
+<div id="clientes20"></div>
+<button onclick="chamarClientes20()" class="botaoWhatsapp">
+Chamar todos no WhatsApp
+</button>
+
+<h3>📅 Mais de 30 dias sem lavar</h3>
+<div id="clientes30"></div>
+<button onclick="chamarClientes30()" class="botaoWhatsapp">
+Chamar todos no WhatsApp
+</button>
+
+<button class="voltar" onclick="voltarMenu()">Voltar</button>
+
+</section>
+
+<section id="configPrecos" class="tela">
+
+<h2>Configurar Preços</h2>
+
+<h3>Carro Passeio</h3>
+Simples
+<input id="passeioSimples" type="number">
+
+Completa
+<input id="passeioCompleta" type="number">
+
+<h3>Utilitário</h3>
+Simples
+<input id="utilitarioSimples" type="number">
+
+Completa
+<input id="utilitarioCompleta" type="number">
+
+<h3>Pick-up</h3>
+Simples
+<input id="pickupSimples" type="number">
+
+Completa
+<input id="pickupCompleta" type="number">
+
+<h3>Moto</h3>
+Simples
+<input id="motoSimples" type="number">
+
+Completa
+<input id="motoCompleta" type="number">
+
+<button onclick="salvarPrecos()">Salvar Preços</button>
+
+<button class="voltar" onclick="voltarMenu()">Voltar</button>
+
+</section>
 
 </body>
 </html>
