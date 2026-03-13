@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lava Jato ERP</title>
+<link rel="stylesheet" href="visual.css">
+<link rel="manifest" href="manifest.json">
+</head>
+<body>
+
+<header>
+<h1>Lava Jato ERP</h1>
+</header>
+
+<main>
+
+<!-- MENU INICIAL -->
+<section id="menu">
+<button class="botaoGrande" onclick="abrirTela('novaLavagem')">Registrar Nova Lavagem</button>
+<button class="botaoGrande" onclick="abrirTela('consultar')">Consultar Veículo</button>
+</section>
+
+<!-- NOVA LAVAGEM -->
+<section id="novaLavagem" class="tela">
+<h2>Registrar Lavagem</h2>
+<input id="placa" placeholder="Placa do veículo">
+<input id="nome" placeholder="Nome do proprietário">
+<input id="telefone" placeholder="Telefone">
+
+<label>Tipo de Veículo</label>
+<select id="tipoVeiculo">
+<option value="">Selecione</option>
+<option value="passeio">Carro passeio</option>
+<option value="utilitario">Utilitário</option>
+<option value="pickup">Pick-up</option>
+<option value="moto">Moto</option>
+</select>
+
+<label>Tipo de Lavagem</label>
+<select id="tipoLavagem">
+<option value="">Selecione</option>
+<option value="simples">Simples</option>
+<option value="completa">Completa</option>
+</select>
+
+<label>Valor</label>
+<input id="valor" readonly>
+
+<button onclick="registrarLavagem()">Salvar Lavagem</button>
+<button class="voltar" onclick="voltarMenu()">Voltar</button>
+</section>
+
+<!-- CONSULTA DE VEÍCULO -->
+<section id="consultar" class="tela">
+<h2>Consultar Veículo</h2>
+<input id="placaConsulta" placeholder="Digite a placa">
+<button onclick="consultarVeiculo()">Consultar</button>
+<div id="resultadoConsulta"></div>
+<button class="voltar" onclick="voltarMenu()">Voltar</button>
+</section>
+
+</main>
+<script src="app.js"></script>
+<script>
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('./sw.js')
+  .then(reg=>console.log('Service Worker registrado', reg))
+  .catch(err=>console.log('Erro SW:', err))
+}
+</script>
+</body>
+</html>
