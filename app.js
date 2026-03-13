@@ -11,7 +11,7 @@ document.querySelectorAll(".tela").forEach(t=> t.style.display="none")
 document.getElementById("menu").style.display="block"
 }
 
-/* ===================== NORMALIZAÇÃO ====================== */
+/* ===================== NORMALIZAÇÃO ===================== */
 function limparNumero(numero){ return numero.replace(/\D/g,'') }
 function limparPlaca(placa){ return placa.toUpperCase().replace(/\s+/g,'') }
 
@@ -610,3 +610,63 @@ return dias > 30
 chamarWhatsAppClientes(lista)
 
 }
+
+function mostrarHistorico(){
+
+let banco = JSON.parse(localStorage.getItem("lavagens")) || []
+
+let lista = document.getElementById("listaHistorico")
+
+lista.innerHTML = ""
+
+banco.sort((a,b)=> new Date(b.data) - new Date(a.data))
+
+banco.forEach((item)=>{
+
+let data = new Date(item.data)
+
+lista.innerHTML += `
+
+<div class="cardHistorico">
+
+<div>
+
+<strong>${item.placa}</strong> - ${item.nome}<br>
+
+${item.tipoVeiculo} / ${item.tipoLavagem}<br>
+
+💰 R$ ${item.valor}<br>
+
+📅 ${data.toLocaleDateString()}  
+⏰ ${data.toLocaleTimeString()}
+
+</div>
+
+<button onclick="apagarLavagem('${item.data}')" class="botaoExcluir">
+🗑 Apagar
+</button>
+
+</div>
+
+`
+
+})
+
+}
+
+function apagarLavagem(dataRegistro){
+
+let confirmar = confirm("Deseja realmente apagar esta lavagem?")
+
+if(!confirmar) return
+
+let banco = JSON.parse(localStorage.getItem("lavagens")) || []
+
+banco = banco.filter(item => item.data !== dataRegistro)
+
+localStorage.setItem("lavagens",JSON.stringify(banco))
+
+mostrarHistorico()
+
+}
+
