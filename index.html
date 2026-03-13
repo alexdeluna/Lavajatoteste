@@ -1,123 +1,186 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lava Jato ERP</title>
+
+<title>NINHO JATO</title>
+
 <link rel="stylesheet" href="visual.css">
 <link rel="manifest" href="manifest.json">
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
+
 <body>
 
 <header>
-<h1>Lava Jato ERP</h1>
+<h1>NINHO JATO</h1>
 </header>
 
 <main>
 
-<!-- MENU INICIAL --->
+<!-- MENU -->
 <section id="menu">
+
 <button class="botaoGrande" onclick="abrirTela('configPrecos'); carregarPrecos()">
 Configurar Preços
 </button>
-<button class="botaoGrande" onclick="abrirTela('novaLavagem')">Registrar Nova Lavagem</button>
-<button class="botaoGrande" onclick="abrirTela('consultar')">Consultar Veículo</button>
-<button class="botaoGrande" onclick="abrirTela('dashboard'); atualizarDashboard()">Dashboard</button>
-<button class="botaoGrande" onclick="abrirTela('historico'); carregarHistorico()">Histórico de Lavagens</button>
+
+<button class="botaoGrande" onclick="abrirTela('novaLavagem')">
+Registrar Nova Lavagem
+</button>
+
+<button class="botaoGrande" onclick="abrirTela('consultar')">
+Consultar Veículo
+</button>
+
+<button class="botaoGrande" onclick="abrirTela('dashboard'); atualizarDashboard()">
+Dashboard
+</button>
+
+<button class="botaoGrande" onclick="abrirTela('historico'); mostrarHistorico()">
+Histórico de Lavagens
+</button>
+
 <button class="botaoGrande" onclick="abrirTela('clientesInteligentes'); analisarClientes()">
 Clientes do Lava-Jato
 </button>
+
 <button class="botaoGrande" onclick="gerarBancoTeste()">
 Gerar Banco de Teste
 </button>
+
 <button class="botaoGrande" onclick="gerarBancoTesteCompleto()">
 Gerar Banco de Testes Completo
 </button>
-</section>
 
+</section>
 
 
 <!-- NOVA LAVAGEM -->
 <section id="novaLavagem" class="tela">
+
 <h2>Registrar Lavagem</h2>
+
 <input id="placa" placeholder="Placa do veículo">
 <input id="nome" placeholder="Nome do proprietário">
 <input id="telefone" placeholder="Telefone">
 
 <label>Tipo de Veículo</label>
 <select id="tipoVeiculo">
+
 <option value="">Selecione</option>
 <option value="passeio">Carro passeio</option>
 <option value="utilitario">Utilitário</option>
 <option value="pickup">Pick-up</option>
 <option value="moto">Moto</option>
+
 </select>
+
 
 <label>Tipo de Lavagem</label>
 <select id="tipoLavagem">
+
 <option value="">Selecione</option>
 <option value="simples">Simples</option>
 <option value="completa">Completa</option>
+
 </select>
+
 
 <label>Valor</label>
 <input id="valor" readonly>
 
-<button onclick="registrarLavagem()">Salvar Lavagem</button>
-<button class="voltar" onclick="voltarMenu()">Voltar</button>
+
+<button onclick="registrarLavagem()">
+Salvar Lavagem
+</button>
+
+<button class="voltar" onclick="voltarMenu()">
+Voltar
+</button>
+
 </section>
 
-<!-- CONSULTA DE VEÍCULO -->
+
+<!-- CONSULTA -->
 <section id="consultar" class="tela">
+
 <h2>Consultar Veículo</h2>
+
 <input id="placaConsulta" placeholder="Digite a placa">
-<button onclick="consultarVeiculo()">Consultar</button>
+
+<button onclick="consultarVeiculo()">
+Consultar
+</button>
+
 <div id="resultadoConsulta"></div>
-<button class="voltar" onclick="voltarMenu()">Voltar</button>
+
+<button class="voltar" onclick="voltarMenu()">
+Voltar
+</button>
+
 </section>
+
 
 <!-- DASHBOARD -->
 <section id="dashboard" class="tela">
+
 <h2>Dashboard</h2>
 
 <div id="faturamento">
+
 <h3>Faturamento</h3>
+
 <p>Hoje: R$ <span id="faturamentoHoje">0</span></p>
 <p>Últimos 7 dias: R$ <span id="faturamentoSemana">0</span></p>
 <p>Mês atual: R$ <span id="faturamentoMes">0</span></p>
+
 </div>
+
 
 <div id="graficoFaturamento">
 <canvas id="chartFaturamento" height="150"></canvas>
 </div>
 
+
 <div id="rankingClientes">
+
 <h3>Clientes Mais Frequentes</h3>
+
 <ul id="listaClientes"></ul>
+
 </div>
+
 
 <div id="clientesChamar">
+
 <h3>Clientes Para Chamar</h3>
+
 <ul id="listaChamar"></ul>
+
 </div>
 
-<button class="voltar" onclick="voltarMenu()">Voltar</button>
-<button onclick="exportarCSV()">Exportar Dados CSV</button>
-<button onclick="backupLocal()">Backup JSON</button>
+
+<button class="voltar" onclick="voltarMenu()">
+Voltar
+</button>
+
+<button onclick="exportarCSV()">
+Exportar Dados CSV
+</button>
+
+<button onclick="backupLocal()">
+Backup JSON
+</button>
+
 </section>
 
-</main>
 
-<script src="app.js"></script>
-<script>
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('./sw.js')
-  .then(reg=>console.log('Service Worker registrado', reg))
-  .catch(err=>console.log('Erro SW:', err))
-}
-</script>
-
+<!-- HISTÓRICO -->
 <section id="historico" class="tela">
 
 <h2>Histórico de Lavagens</h2>
@@ -130,72 +193,119 @@ Voltar
 
 </section>
 
+
+<!-- CLIENTES INTELIGENTES -->
 <section id="clientesInteligentes" class="tela">
 
 <h2>Clientes do Lava-Jato</h2>
 
+
 <h3>💰 Faturamento Hoje</h3>
 <p id="faturamentoHojeTempoReal">R$ 0</p>
+
 
 <h3>🚗 Lavaram Hoje</h3>
 <div id="clientesHoje"></div>
 
+
 <h3>⭐ Clientes VIP (10+ lavagens)</h3>
 <div id="clientesVIP"></div>
 
+
 <h3>📅 Mais de 20 dias sem lavar</h3>
+
 <div id="clientes20"></div>
+
 <button onclick="chamarClientes20()" class="botaoWhatsapp">
 Chamar todos no WhatsApp
 </button>
 
+
 <h3>📅 Mais de 30 dias sem lavar</h3>
+
 <div id="clientes30"></div>
+
 <button onclick="chamarClientes30()" class="botaoWhatsapp">
 Chamar todos no WhatsApp
 </button>
 
-<button class="voltar" onclick="voltarMenu()">Voltar</button>
+
+<button class="voltar" onclick="voltarMenu()">
+Voltar
+</button>
 
 </section>
 
+
+<!-- CONFIGURAÇÃO DE PREÇOS -->
 <section id="configPrecos" class="tela">
 
 <h2>Configurar Preços</h2>
 
+
 <h3>Carro Passeio</h3>
+
 Simples
 <input id="passeioSimples" type="number">
 
 Completa
 <input id="passeioCompleta" type="number">
 
+
 <h3>Utilitário</h3>
+
 Simples
 <input id="utilitarioSimples" type="number">
 
 Completa
 <input id="utilitarioCompleta" type="number">
 
+
 <h3>Pick-up</h3>
+
 Simples
 <input id="pickupSimples" type="number">
 
 Completa
 <input id="pickupCompleta" type="number">
 
+
 <h3>Moto</h3>
+
 Simples
 <input id="motoSimples" type="number">
 
 Completa
-<input id="motoCompleta" type="number">
+<input id="motoCompleta" type="number>
 
-<button onclick="salvarPrecos()">Salvar Preços</button>
 
-<button class="voltar" onclick="voltarMenu()">Voltar</button>
+<button onclick="salvarPrecos()">
+Salvar Preços
+</button>
+
+<button class="voltar" onclick="voltarMenu()">
+Voltar
+</button>
 
 </section>
+
+</main>
+
+
+<script src="app.js"></script>
+
+
+<script>
+
+if('serviceWorker' in navigator){
+
+navigator.serviceWorker.register('./sw.js')
+.then(reg=>console.log('Service Worker registrado', reg))
+.catch(err=>console.log('Erro SW:', err))
+
+}
+
+</script>
 
 </body>
 </html>
