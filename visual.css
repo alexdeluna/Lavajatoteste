@@ -20,3 +20,21 @@ padding:10px;
 border-radius:6px;
 cursor:pointer;
 }
+.botaoExcluir{
+background:#e74c3c;
+color:white;
+border:none;
+padding:6px 10px;
+border-radius:6px;
+cursor:pointer;
+}
+
+.cardHistorico{
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:#f2f2f2;
+padding:10px;
+border-radius:8px;
+margin-bottom:10px;
+}
