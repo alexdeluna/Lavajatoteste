@@ -11,7 +11,7 @@ document.querySelectorAll(".tela").forEach(t=> t.style.display="none")
 document.getElementById("menu").style.display="block"
 }
 
-/* ===================== NORMALIZAÇÃO ===================== */
+/* ===================== NORMALIZAÇÃO ====================== */
 function limparNumero(numero){ return numero.replace(/\D/g,'') }
 function limparPlaca(placa){ return placa.toUpperCase().replace(/\s+/g,'') }
 
