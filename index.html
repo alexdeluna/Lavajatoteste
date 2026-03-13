@@ -6,6 +6,7 @@
 <title>Lava Jato ERP</title>
 <link rel="stylesheet" href="visual.css">
 <link rel="manifest" href="manifest.json">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -19,6 +20,7 @@
 <section id="menu">
 <button class="botaoGrande" onclick="abrirTela('novaLavagem')">Registrar Nova Lavagem</button>
 <button class="botaoGrande" onclick="abrirTela('consultar')">Consultar Veículo</button>
+<button class="botaoGrande" onclick="abrirTela('dashboard'); atualizarDashboard()">Dashboard</button>
 </section>
 
 <!-- NOVA LAVAGEM -->
@@ -60,7 +62,38 @@
 <button class="voltar" onclick="voltarMenu()">Voltar</button>
 </section>
 
+<!-- DASHBOARD -->
+<section id="dashboard" class="tela">
+<h2>Dashboard</h2>
+
+<div id="faturamento">
+<h3>Faturamento</h3>
+<p>Hoje: R$ <span id="faturamentoHoje">0</span></p>
+<p>Últimos 7 dias: R$ <span id="faturamentoSemana">0</span></p>
+<p>Mês atual: R$ <span id="faturamentoMes">0</span></p>
+</div>
+
+<div id="graficoFaturamento">
+<canvas id="chartFaturamento" height="150"></canvas>
+</div>
+
+<div id="rankingClientes">
+<h3>Clientes Mais Frequentes</h3>
+<ul id="listaClientes"></ul>
+</div>
+
+<div id="clientesChamar">
+<h3>Clientes Para Chamar</h3>
+<ul id="listaChamar"></ul>
+</div>
+
+<button class="voltar" onclick="voltarMenu()">Voltar</button>
+<button onclick="exportarCSV()">Exportar Dados CSV</button>
+<button onclick="backupLocal()">Backup JSON</button>
+</section>
+
 </main>
+
 <script src="app.js"></script>
 <script>
 if('serviceWorker' in navigator){
@@ -69,5 +102,6 @@ if('serviceWorker' in navigator){
   .catch(err=>console.log('Erro SW:', err))
 }
 </script>
+
 </body>
 </html>
