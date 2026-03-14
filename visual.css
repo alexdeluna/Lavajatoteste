@@ -89,3 +89,49 @@ font-size: 14px;
 cursor: pointer;
 
 }
+
+.botaoSalvar{
+
+background:#16a34a;
+
+color:white;
+
+border:none;
+
+padding:12px 20px;
+
+border-radius:8px;
+
+font-size:16px;
+
+cursor:pointer;
+
+margin-top:15px;
+
+width:100%;
+
+transition:0.2s;
+
+}
+
+.botaoSalvar:hover{
+
+background:#15803d;
+
+transform:scale(1.02);
+
+}
+
+.clienteLinha{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:10px;
+margin-bottom:8px;
+background:#f5f5f5;
+border-radius:8px;
+}
+
+.clienteLinha button{
+margin-left:5px;
+}
