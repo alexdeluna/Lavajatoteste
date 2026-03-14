@@ -58,6 +58,7 @@ document.getElementById("telefone").value=""
 document.getElementById("tipoVeiculo").value=""
 document.getElementById("tipoLavagem").value=""
 document.getElementById("valor").value=""
+atualizarSistema()
 }
 
 /* ===================== CONSULTAR VEÍCULO ===================== */
@@ -226,74 +227,6 @@ Data: ${data.toLocaleDateString()} ${data.toLocaleTimeString()}<br>
 
 }
 
-function gerarBancoTeste(){
-
-const clientes = [
-
-{nome:"Barbara", telefone:"81986163075"},
-{nome:"Ruth", telefone:"81988751286"},
-{nome:"Rafa", telefone:"81995328408"},
-{nome:"Márcia", telefone:"81988130616"}
-
-]
-
-const placas = [
-"QWE1234",
-"ABC9087",
-"JKL4567",
-"XYZ3210",
-"BRA2024",
-"CAR9090",
-"MOT7788",
-"PIC4455"
-]
-
-const tiposVeiculo = ["passeio","utilitario","pickup","moto"]
-const tiposLavagem = ["simples","completa"]
-
-/* limpa banco antigo */
-
-banco = []
-
-for(let i=0;i<60;i++){
-
-let cliente = clientes[Math.floor(Math.random()*clientes.length)]
-
-let veiculo = tiposVeiculo[Math.floor(Math.random()*tiposVeiculo.length)]
-
-let lavagem = tiposLavagem[Math.floor(Math.random()*tiposLavagem.length)]
-
-let valor = tabelaPrecos[veiculo][lavagem]
-
-let placa = placas[Math.floor(Math.random()*placas.length)]
-
-let diasAtras = Math.floor(Math.random()*30)
-
-let data = new Date()
-
-data.setDate(data.getDate()-diasAtras)
-
-let registro = {
-
-placa:placa,
-nome:cliente.nome,
-telefone:cliente.telefone,
-tipoVeiculo:veiculo,
-tipoLavagem:lavagem,
-valor:valor,
-data:data.toISOString()
-
-}
-
-banco.push(registro)
-
-}
-
-localStorage.setItem("lavagens",JSON.stringify(banco))
-
-alert("Banco de testes criado com sucesso!")
-
-}
 
 function analisarClientes(){
 
@@ -463,96 +396,6 @@ alert("Preços atualizados com sucesso!")
 
 }
 
-function gerarBancoTesteCompleto(){
-
-const clientes = [
-
-{nome:"Barbara", telefone:"81986163075"},
-{nome:"Ruth", telefone:"81988751286"},
-{nome:"Rafa", telefone:"81995328408"},
-{nome:"Márcia", telefone:"81988130616"}
-
-]
-
-const placas = {
-Barbara:"BAR1234",
-Ruth:"RUT5678",
-Rafa:"RAF9012",
-Márcia:"MAR3456"
-}
-
-const tiposVeiculo = ["passeio","utilitario","pickup","moto"]
-const tiposLavagem = ["simples","completa"]
-
-banco = []
-
-function criarRegistro(cliente,diasAtras){
-
-let veiculo = tiposVeiculo[Math.floor(Math.random()*tiposVeiculo.length)]
-let lavagem = tiposLavagem[Math.floor(Math.random()*tiposLavagem.length)]
-let valor = tabelaPrecos[veiculo][lavagem]
-
-let data = new Date()
-data.setDate(data.getDate()-diasAtras)
-
-return {
-
-placa:placas[cliente.nome],
-nome:cliente.nome,
-telefone:cliente.telefone,
-tipoVeiculo:veiculo,
-tipoLavagem:lavagem,
-valor:valor,
-data:data.toISOString()
-
-}
-
-}
-
-/* ===== Barbara (cliente VIP) ===== */
-
-for(let i=0;i<15;i++){
-
-banco.push(criarRegistro(clientes[0], i))
-
-}
-
-/* ===== Ruth (lavou hoje e ontem) ===== */
-
-banco.push(criarRegistro(clientes[1],0))
-banco.push(criarRegistro(clientes[1],1))
-banco.push(criarRegistro(clientes[1],3))
-banco.push(criarRegistro(clientes[1],5))
-
-/* ===== Rafa (20 dias sem lavar) ===== */
-
-banco.push(criarRegistro(clientes[2],21))
-banco.push(criarRegistro(clientes[2],22))
-banco.push(criarRegistro(clientes[2],25))
-
-/* ===== Márcia (30 dias sem lavar) ===== */
-
-banco.push(criarRegistro(clientes[3],31))
-banco.push(criarRegistro(clientes[3],35))
-banco.push(criarRegistro(clientes[3],40))
-
-/* ===== registros extras para dashboard ===== */
-
-for(let i=0;i<40;i++){
-
-let cliente = clientes[Math.floor(Math.random()*clientes.length)]
-
-let dias = Math.floor(Math.random()*30)
-
-banco.push(criarRegistro(cliente,dias))
-
-}
-
-localStorage.setItem("lavagens",JSON.stringify(banco))
-
-alert("Banco de testes completo criado!")
-
-}
 
 function chamarWhatsAppClientes(lista){
 
@@ -666,7 +509,30 @@ banco = banco.filter(item => item.data !== dataRegistro)
 
 localStorage.setItem("lavagens",JSON.stringify(banco))
 
+atualizarSistema()
 mostrarHistorico()
+
 
 }
 
+function atualizarSistema(){
+
+// recarrega banco
+banco = JSON.parse(localStorage.getItem("lavagens")) || []
+
+// atualiza histórico se estiver aberto
+if(document.getElementById("historico").style.display === "block"){
+mostrarHistorico()
+}
+
+// atualiza dashboard se estiver aberto
+if(document.getElementById("dashboard").style.display === "block"){
+atualizarDashboard()
+}
+
+// atualiza clientes inteligentes se estiver aberto
+if(document.getElementById("clientesInteligentes").style.display === "block"){
+analisarClientes()
+}
+
+}
