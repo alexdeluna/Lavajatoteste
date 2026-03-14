@@ -9,6 +9,7 @@ document.getElementById(tela).style.display="block"
 function voltarMenu(){
 document.querySelectorAll(".tela").forEach(t=> t.style.display="none")
 document.getElementById("menu").style.display="block"
+limparConsultaVeiculo()
 }
 
 /* ===================== NORMALIZAÇÃO ===================== */
@@ -63,26 +64,76 @@ atualizarSistema()
 
 /* ===================== CONSULTAR VEÍCULO ===================== */
 function consultarVeiculo(){
-let placa = limparPlaca(document.getElementById("placaConsulta").value)
-let registros = banco.filter(r=>r.placa===placa)
+
+let busca = document.getElementById("buscarPlaca").value.trim().toLowerCase()
+
+let registros = banco.filter(r =>
+r.placa.toLowerCase().includes(busca) ||
+r.nome.toLowerCase().includes(busca)
+)
+
 let resultado = document.getElementById("resultadoConsulta")
-if(registros.length===0){resultado.innerHTML="Veículo não encontrado"; return}
+
+if(registros.length === 0){
+resultado.innerHTML = "Cliente ou veículo não encontrado"
+return
+}
+
 let cliente = registros[0]
+
 let ultima = registros[registros.length-1]
+
 let dataUltima = new Date(ultima.data)
+
 let dias = (Date.now()-dataUltima)/(1000*60*60*24)
+
 let alerta = dias>15 ? "<div class='alerta'>Cliente pode ser chamado novamente</div>" : ""
+
 let historico = ""
 let totalGasto = 0
+
 registros.forEach(r=>{
+
 let d = new Date(r.data)
+
 historico += `<div>${d.toLocaleDateString()} ${d.toLocaleTimeString()} - ${r.tipoVeiculo} ${r.tipoLavagem} - R$ ${r.valor}</div>`
+
 totalGasto += Number(r.valor)
+
 })
+
 let numeroWhats = limparNumero(cliente.telefone)
-let mensagem = `Olá ${cliente.nome}, vimos que já faz um tempo desde a última lavagem do seu veículo (${placa}). Que tal trazer novamente ao nosso lava-jato?`
+
+let mensagem = `Olá ${cliente.nome}, vimos que já faz um tempo desde a última lavagem do seu veículo (${cliente.placa}). Que tal trazer novamente ao nosso lava-jato?`
+
 let linkWhats = `https://wa.me/55${numeroWhats}?text=${encodeURIComponent(mensagem)}`
-resultado.innerHTML = `<div class="card"><strong>Placa:</strong> ${placa}<br>Cliente: ${cliente.nome}<br>Telefone: ${numeroWhats}<br>Última lavagem: ${dataUltima.toLocaleDateString()}<br>Total de lavagens: ${registros.length}<br>Total gasto: R$ ${totalGasto}<br>${alerta}<br><br><a href="${linkWhats}" target="_blank"><button>Chamar no WhatsApp</button></a><h3>Histórico de Lavagens</h3>${historico}</div>`
+
+resultado.innerHTML = `
+
+<div class="card">
+
+<strong>Cliente:</strong> ${cliente.nome}<br>
+Telefone: ${numeroWhats}<br>
+Última lavagem: ${dataUltima.toLocaleDateString()}<br>
+Total de lavagens: ${registros.length}<br>
+Total gasto: R$ ${totalGasto}<br>
+
+${alerta}
+
+<br>
+
+<a href="${linkWhats}" target="_blank">
+<button>Chamar no WhatsApp</button>
+</a>
+
+<h3>Histórico de Lavagens</h3>
+
+${historico}
+
+</div>
+
+`
+
 }
 
 /* ===================== DASHBOARD ===================== */
@@ -263,15 +314,11 @@ ultima:data
 clientes[nome].lavagens++
 
 if(data > clientes[nome].ultima){
-
 clientes[nome].ultima=data
-
 }
 
 if(data.toDateString() === hoje){
-
 faturamentoHoje += Number(r.valor)
-
 }
 
 })
@@ -300,27 +347,77 @@ let msg = `Olá ${c.nome}, estamos esperando você para a próxima lavagem do se
 
 let link = `https://wa.me/55${numero}?text=${encodeURIComponent(msg)}`
 
+/* CLIENTES QUE LAVARAM HOJE */
+
 if(new Date(c.ultima).toDateString() === hoje){
 
-hojeLista.innerHTML += `<div class="card">${c.nome} - ${c.placa}</div>`
+hojeLista.innerHTML += `
+<div class="card clienteLinha">
+
+<span>
+${c.nome} - ${c.placa}
+</span>
+
+<div>
+
+<button 
+onclick="agradecerCliente('${c.telefone}', this)"
+class="btnAgradecer">
+Agradecer
+</button>
+
+</div>
+
+</div>
+`
 
 }
+
+/* CLIENTES VIP */
 
 if(c.lavagens >= 10){
 
-vipLista.innerHTML += `<div class="card">${c.nome} (${c.lavagens} lavagens)</div>`
+vipLista.innerHTML += `
+<div class="card">
+⭐ ${c.nome} (${c.lavagens} lavagens)
+</div>
+`
 
 }
+
+/* CLIENTES +20 DIAS */
 
 if(dias >= 20){
 
-lista20.innerHTML += `<div class="card">${c.nome} (${Math.floor(dias)} dias) <a href="${link}" target="_blank"><button>WhatsApp</button></a></div>`
+lista20.innerHTML += `
+<div class="card">
+
+${c.nome} (${Math.floor(dias)} dias)
+
+<a href="${link}" target="_blank">
+<button>WhatsApp</button>
+</a>
+
+</div>
+`
 
 }
 
+/* CLIENTES +30 DIAS */
+
 if(dias >= 30){
 
-lista30.innerHTML += `<div class="card">${c.nome} (${Math.floor(dias)} dias) <a href="${link}" target="_blank"><button>WhatsApp</button></a></div>`
+lista30.innerHTML += `
+<div class="card">
+
+${c.nome} (${Math.floor(dias)} dias)
+
+<a href="${link}" target="_blank">
+<button>WhatsApp</button>
+</a>
+
+</div>
+`
 
 }
 
@@ -534,5 +631,113 @@ atualizarDashboard()
 if(document.getElementById("clientesInteligentes").style.display === "block"){
 analisarClientes()
 }
+
+}
+
+function mostrarClientesHoje(){
+
+const lavagens = JSON.parse(localStorage.getItem("lavagens")) || [];
+
+const hoje = new Date().toISOString().slice(0,10);
+
+const clientesHoje = lavagens.filter(l => l.data.slice(0,10) === hoje);
+
+const container = document.getElementById("clientesHoje");
+
+container.innerHTML = "";
+
+clientesHoje.forEach(cliente => {
+
+container.innerHTML += `
+<div class="clienteLinha">
+
+<span>
+${cliente.nome} - ${cliente.placa}
+</span>
+
+<div>
+
+<button onclick="abrirWhatsapp('${cliente.telefone}')">
+WhatsApp
+</button>
+
+<button onclick="agradecerCliente('${cliente.telefone}')">
+Agradecer
+</button>
+
+</div>
+
+</div>
+`;
+
+});
+
+}
+
+function agradecerCliente(telefone){
+
+if(!telefone){
+alert("Cliente não possui telefone cadastrado.");
+return;
+}
+
+const numero = telefone.replace(/\D/g,"");
+
+const mensagem = encodeURIComponent(
+"Muito obrigado por ter escolhido o Ninho Jato! 🚗✨\n\n" +
+"Esperamos que tenha gostado dos nossos serviços.\n\n" +
+"Fique à vontade para fazer críticas ou sugestões, pois sua opinião é muito importante para o crescimento da nossa empresa."
+);
+
+const link = `https://wa.me/55${numero}?text=${mensagem}`;
+
+window.open(link, "_blank");
+
+}
+
+/* ===================== ABRIR WHATSAPP ===================== */
+
+function abrirWhatsapp(telefone){
+
+if(!telefone){
+alert("Cliente não possui telefone cadastrado.");
+return;
+}
+
+let numero = telefone.replace(/\D/g,"")
+
+let mensagem = "Olá! Obrigado por utilizar os serviços do Ninho Jato 🚗"
+
+let url = "https://wa.me/55"+numero+"?text="+encodeURIComponent(mensagem)
+
+window.open(url,"_blank")
+
+}
+
+function agradecerCliente(telefone, botao){
+
+let numero = limparNumero(telefone)
+
+let mensagem = "Muito obrigado por ter escolhido o Ninho Jato, esperamos que tenha gostado do nosso serviço. Sua opinião é muito importante para o crescimento da nossa empresa."
+
+let link = `https://wa.me/55${numero}?text=${encodeURIComponent(mensagem)}`
+
+window.open(link,"_blank")
+
+/* ALTERA O VISUAL DO BOTÃO */
+
+botao.innerText = "✔ Agradecido"
+botao.style.background = "#2ecc71"
+botao.disabled = true
+
+}
+
+function limparConsultaVeiculo(){
+
+let campo = document.getElementById("buscarPlaca")
+let resultado = document.getElementById("resultadoConsulta")
+
+if(campo) campo.value = ""
+if(resultado) resultado.innerHTML = ""
 
 }
